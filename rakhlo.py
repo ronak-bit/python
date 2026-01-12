@@ -1,0 +1,72 @@
+import pygame
+import sys
+import time
+import random
+
+pygame.init()
+
+WIDTH, HEIGHT = 1000, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Faasle")
+
+FONT = pygame.font.SysFont("Georgia", 40, bold=True)
+colors = [
+    (82, 8, 23),
+    (120, 30, 60),
+    (176, 60, 92),
+    (250, 195, 210),
+    (60, 25, 70)
+]
+
+# UPDATED LYRICS
+lyrics = [
+    "humse jo rooth gayi ho",
+    "rehti chup hoke pure din",
+    "tum likh lo jaise katgarhe",
+    "mein hum khat padh lenge shauk se",
+    "isi ek pal ke bahane se",
+    "hum galti se paas aayenge",
+    "phir kehni ki thi galti",
+    "aur uska kya hi kehna",
+]
+
+def typewriter_text(text, color, bg_color, char_delay=0.1, duration=1.2):
+    current_text = ""
+    for char in text:
+        current_text += char
+        text_surface = FONT.render(current_text, True, color)
+        text_surface = text_surface.convert_alpha()
+        rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+
+        screen.fill(bg_color)
+        screen.blit(text_surface, rect)
+        pygame.display.flip()
+        time.sleep(char_delay)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    time.sleep(duration)
+
+    for alpha in range(255, -1, -5):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(bg_color)
+        text_surface.set_alpha(alpha)
+        screen.blit(text_surface, rect)
+        pygame.display.flip()
+        time.sleep(0.02)
+
+
+durations = [0.8] * len(lyrics)
+
+for i, line in enumerate(lyrics):
+    bg = random.choice(colors)
+    typewriter_text(line, (255, 255, 255), bg, char_delay=0.07, duration=durations[i])
+
+pygame.quit()
